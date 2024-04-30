@@ -18,6 +18,11 @@ class Post extends Model
         'content',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');

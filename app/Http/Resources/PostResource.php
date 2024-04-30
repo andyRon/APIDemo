@@ -4,29 +4,30 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
+use Tests\Resources\CommentResource;
+use Tests\Resources\UserResource;
+use TiMacDonald\JsonApi\JsonApiResource;
+use TiMacDonald\JsonApi\Link;
 
-class PostResource extends JsonResource
+class PostResource extends JsonApiResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+    public function toAttributes(Request $request)
     {
-//        return parent::toArray($request);
+        return Arr::except($this->resource->toArray(), 'id');
+    }
+
+    public function toRelationships(Request $request)
+    {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'slug' => $this->slug,
-            'content' => $this->content,
-            'views' => $this->views,
-            'created_at' => $this->created_at->toDateTimeString(),
-            'updated_at' => $this->updated_at->toDateTimeString(),
-            'relations' => [
-                'author' => $this->author,
-                'comments' => $this->comments
-            ]
+            'author' => fn() => new UserResource($this->author),
+            'comments' => fn() => CommentResource::collection($this->comments),
+        ];
+    }
+    public function toLinks(Request $request)
+    {
+        return [
+            Link::self(route('test.show', $this->resource)),
         ];
     }
 }
