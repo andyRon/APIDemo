@@ -5,18 +5,18 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
-use Tests\Resources\CommentResource;
-use Tests\Resources\UserResource;
 use TiMacDonald\JsonApi\JsonApiResource;
 use TiMacDonald\JsonApi\Link;
 
 class PostResource extends JsonApiResource
 {
+    // 定义的属性字段会映射 JSON API 的 attributes
     public function toAttributes(Request $request)
     {
-        return Arr::except($this->resource->toArray(), 'id');
+        return Arr::except($this->resource->toArray(), ['id', 'author', 'comments']);
     }
 
+    // 定义的关联资源会映射到 JSON API 的 relationships 以及 included
     public function toRelationships(Request $request)
     {
         return [
@@ -27,7 +27,7 @@ class PostResource extends JsonApiResource
     public function toLinks(Request $request)
     {
         return [
-            Link::self(route('test.show', $this->resource)),
+            Link::self(route('posts.show', $this->resource)),
         ];
     }
 }

@@ -18,6 +18,7 @@ class Post extends Model
         'content',
     ];
 
+    // 对属性做格式转化
     protected $casts = [
         'created_at' => 'datetime:Y-m-d H:i:s',
         'updated_at' => 'datetime:Y-m-d H:i:s',
